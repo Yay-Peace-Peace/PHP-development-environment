@@ -1,0 +1,41 @@
+version: "3"
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./www:/app
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - ./batabase:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    restart: always
+    volumes:
+      - ./uploads.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+  samba:
+    tty: true
+    network_mode: bridge
+    volumes:
+      - ./www:/Shared
+    ports:
+      - "139:139"
+      - "445:445"
+    build:
+      context: ./samba/
+      dockerfile: Dockerfile
