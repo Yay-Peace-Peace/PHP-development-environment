@@ -16,7 +16,7 @@ services:
     cap_add:
       - SYS_NICE
     volumes:
-      - ./batabase:/var/lib/mysql
+      - ./database:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
   phpmyadmin:
